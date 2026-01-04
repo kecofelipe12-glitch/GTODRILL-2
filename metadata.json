@@ -1,0 +1,7 @@
+{
+  "name": "Copy of GTO Poker Drill Trainer Desktop",
+  "description": "A professional-grade desktop poker training application focused on pre-flop GTO decision making.",
+  "category": "Education / Productivity",
+  "platform": "Desktop (Electron)",
+  "requestFramePermissions": []
+}

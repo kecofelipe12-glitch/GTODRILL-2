@@ -1,11 +1,30 @@
-<div align="center">
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+# GTO Drill Trainer - Desktop App
 
-  <h1>Built with AI Studio</h2>
+Este projeto foi convertido para rodar nativamente como um aplicativo de desktop usando Electron.
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+## Como rodar localmente (Desenvolvimento)
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
+1. Certifique-se de ter o [Node.js](https://nodejs.org/) instalado.
+2. No terminal, na raiz do projeto, instale as dependências:
+   ```bash
+   npm install
+   ```
+3. Inicie a aplicação:
+   ```bash
+   npm start
+   ```
 
-</div>
+## Como gerar o instalador (.EXE / .DMG)
+
+Para criar o arquivo que você pode enviar para outras pessoas instalarem:
+
+1. Execute o comando de build:
+   ```bash
+   npm run build
+   ```
+2. O instalador será gerado na pasta `/dist`.
+
+## Requisitos
+- Conexão com internet (para carregar o Tailwind e React via ESM.sh no primeiro carregamento).
+- Windows 10+, macOS ou Linux.

@@ -1,0 +1,26 @@
+
+{
+  "name": "gto-drill-trainer",
+  "version": "1.0.0",
+  "description": "GTO Poker Drill Trainer Profissional",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "keywords": ["poker", "gto", "trainer"],
+  "author": "GTO Expert",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1"
+  },
+  "build": {
+    "appId": "com.gtodrill.trainer",
+    "productName": "GTO Drill Trainer",
+    "win": { "target": "nsis" },
+    "mac": { "target": "dmg" },
+    "linux": { "target": "AppImage" },
+    "directories": { "output": "dist" }
+  }
+}
