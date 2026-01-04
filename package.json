@@ -6,8 +6,9 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
+    "clean": "if exist dist rmdir /s /q dist",
     "build": "echo 'Web build skip: using root files'",
-    "electron-build": "electron-builder"
+    "electron-build": "npm run clean && electron-builder --win"
   },
   "keywords": ["poker", "gto", "trainer"],
   "author": "GTO Expert",
@@ -19,9 +20,37 @@
   "build": {
     "appId": "com.gtodrill.trainer",
     "productName": "GTO Drill Trainer",
-    "win": { "target": "nsis" },
-    "mac": { "target": "dmg" },
-    "linux": { "target": "AppImage" },
-    "directories": { "output": "dist" }
+    "compression": "maximum",
+    "asar": true,
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ],
+      "publish": null
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "GTO Drill Trainer"
+    },
+    "files": [
+      "**/*",
+      "!dist/*",
+      "!node_modules/*",
+      "!README.md",
+      "!vercel.json",
+      "!.git/*"
+    ]
   }
 }

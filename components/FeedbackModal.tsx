@@ -139,9 +139,10 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ scenario, userAction, onC
 
               <button 
                 onClick={onContinue}
-                className="w-full bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black text-xs py-4 rounded-xl transition-all uppercase tracking-[0.2em] shadow-lg active:scale-[0.98]"
+                className="w-full bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black text-xs py-4 rounded-xl transition-all uppercase tracking-[0.2em] shadow-lg active:scale-[0.98] flex items-center justify-center gap-2"
               >
                 Continuar Treino
+                <span className="px-1.5 py-0.5 rounded bg-black/20 text-[9px] opacity-60">ENTER</span>
               </button>
            </div>
 

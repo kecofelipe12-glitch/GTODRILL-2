@@ -1,5 +1,5 @@
 
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, session } = require('electron');
 const path = require('path');
 
 function createWindow() {
@@ -9,17 +9,35 @@ function createWindow() {
     backgroundColor: '#09090b',
     title: 'GTO Drill Trainer',
     webPreferences: {
-      nodeIntegration: false,
-      contextIsolation: true,
-      preload: path.join(__dirname, 'preload.js')
+      nodeIntegration: true,
+      contextIsolation: false, // Necessário para alguns carregadores dinâmicos de TSX
+      webSecurity: false,      // Permite carregar scripts do esm.sh via file://
+      devTools: true
     }
   });
 
+  // Remove o menu padrão
   win.setMenuBarVisibility(false);
+
+  // Abre o DevTools automaticamente para ajudar no debug se houver erro
+  // win.webContents.openDevTools();
+
   win.loadFile('index.html');
 }
 
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  // Configura o cabeçalho de segurança para permitir scripts externos
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    callback({
+      responseHeaders: {
+        ...details.responseHeaders,
+        'Content-Security-Policy': ["default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src *; style-src * 'unsafe-inline';"]
+      }
+    });
+  });
+
+  createWindow();
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();

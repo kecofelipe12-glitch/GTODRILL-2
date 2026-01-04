@@ -61,7 +61,7 @@ const App: React.FC = () => {
     loadNewHand();
   }, [config.preflopAction, config.stackMin, config.stackMax, config.players, config.randomizeVillainStacks]);
 
-  const handleAction = (action: ActionType) => {
+  const handleAction = useCallback((action: ActionType) => {
     if (!scenario || isProcessing) return;
     
     setIsProcessing(true);
@@ -79,7 +79,7 @@ const App: React.FC = () => {
       
       timerRef.current = setTimeout(() => {
         loadNewHand();
-      }, 1500);
+      }, 1200);
     } else {
       soundEngine.playWrong();
       setShowErrorModal(true);
@@ -102,7 +102,36 @@ const App: React.FC = () => {
         blunder: newBlunder
       };
     });
-  };
+  }, [scenario, isProcessing, loadNewHand]);
+
+  // Keyboard Shortcuts Listener
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (showErrorModal || viewingOpponent) {
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Escape') {
+          if (showErrorModal) handleCloseErrorModal();
+          if (viewingOpponent) setViewingOpponent(null);
+        }
+        return;
+      }
+
+      if (isProcessing) return;
+
+      switch(e.key) {
+        case '1': handleAction('FOLD'); break;
+        case '2': handleAction('CALL'); break;
+        case '3': handleAction('RAISE'); break;
+        case '4': handleAction('ALLIN'); break;
+        case 'Enter': 
+        case ' ':
+          if (feedback) loadNewHand();
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleAction, showErrorModal, viewingOpponent, isProcessing, feedback, loadNewHand]);
 
   const handleOpenOpponentRange = (pos: Position, actionData: { action: ActionType }) => {
     if (!scenario) return;
@@ -149,7 +178,7 @@ const App: React.FC = () => {
            <div className="flex items-center gap-10">
               <div className="flex flex-col">
                  <span className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] leading-none mb-1.5">Ação</span>
-                 <span className="text-sm font-black text-zinc-100 uppercase tracking-tight">{config.preflopAction}</span>
+                 <span className="text-sm font-black text-zinc-100 uppercase tracking-tight">{scenario?.drillMode || config.preflopAction}</span>
               </div>
               <div className="w-px h-8 bg-zinc-800/50"></div>
               <div className="flex flex-col">
