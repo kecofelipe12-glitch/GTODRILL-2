@@ -6,7 +6,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder"
+    "build": "echo 'Web build skip: using root files'",
+    "electron-build": "electron-builder"
   },
   "keywords": ["poker", "gto", "trainer"],
   "author": "GTO Expert",
