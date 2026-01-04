@@ -1,13 +1,13 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Scenario, Stats, ActionType, TrainingConfig, Position, PreflopAction } from './types';
-import { generateScenario, getOpponentActionMatrix } from './engine/gtoLogic';
-import StatsPanel from './components/StatsPanel';
-import PokerTable from './components/PokerTable';
-import ActionPanel from './components/ActionPanel';
-import FeedbackModal from './components/FeedbackModal';
-import RangeViewerModal from './components/RangeViewerModal';
-import { soundEngine } from './utils/soundEngine';
+import { Scenario, Stats, ActionType, TrainingConfig, Position, PreflopAction } from './types.ts';
+import { generateScenario, getOpponentActionMatrix } from './engine/gtoLogic.ts';
+import StatsPanel from './components/StatsPanel.tsx';
+import PokerTable from './components/PokerTable.tsx';
+import ActionPanel from './components/ActionPanel.tsx';
+import FeedbackModal from './components/FeedbackModal.tsx';
+import RangeViewerModal from './components/RangeViewerModal.tsx';
+import { soundEngine } from './utils/soundEngine.ts';
 
 const App: React.FC = () => {
   const [scenario, setScenario] = useState<Scenario | null>(null);
@@ -104,7 +104,6 @@ const App: React.FC = () => {
     });
   }, [scenario, isProcessing, loadNewHand]);
 
-  // Keyboard Shortcuts Listener
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (showErrorModal || viewingOpponent) {

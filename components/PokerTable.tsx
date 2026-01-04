@@ -1,8 +1,8 @@
 
 import React from 'react';
-import { Position, Scenario, TrainingConfig } from '../types';
-import { getActivePositions } from '../engine/gtoLogic';
-import PlayerSeat from './PlayerSeat';
+import { Position, Scenario, TrainingConfig } from '../types.ts';
+import { getActivePositions } from '../engine/gtoLogic.ts';
+import PlayerSeat from './PlayerSeat.tsx';
 
 interface PokerTableProps {
   scenario: Scenario;
@@ -29,7 +29,6 @@ const PokerTable: React.FC<PokerTableProps> = ({ scenario, config, onViewOpponen
     <div className="relative w-full max-w-5xl aspect-[2/1] mx-auto mt-4 px-8 select-none">
       <div className="absolute inset-8 felt-gradient rounded-[180px] border border-zinc-800/80 shadow-[0_30px_100px_-20px_rgba(0,0,0,0.9)] flex items-center justify-center overflow-hidden">
         <div className="w-[98%] h-[96%] border border-zinc-900/30 rounded-[170px] relative flex items-center justify-center">
-          {/* Watermark Logo - Minimalist and Discrete */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.008]">
              <span className="text-[40px] font-black tracking-[-0.05em] rotate-[-2deg] select-none text-white">GTODRILL</span>
           </div>

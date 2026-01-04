@@ -1,5 +1,6 @@
-import { Scenario, Position, Card, ActionType, Rank, Suit, TrainingConfig, PreflopAction } from '../types';
-import { RANKS, SUITS, POSITIONS_9MAX } from '../constants';
+
+import { Scenario, Position, Card, ActionType, Rank, Suit, TrainingConfig, PreflopAction } from '../types.ts';
+import { RANKS, SUITS, POSITIONS_9MAX } from '../constants.tsx';
 
 const RANK_ORDER: Rank[] = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
 
@@ -20,7 +21,6 @@ const evaluateRFI = (r1: Rank, r2: Rank, suited: boolean, pos: Position, stack: 
   const low = Math.min(v1, v2);
   const pair = v1 === v2;
 
-  // Stacks muito curtos (<12bb): Estratégia de Push/Fold
   if (stack <= 12) {
     if (pair && high >= 2) return 'ALLIN';
     if (high === 14) return 'ALLIN';
@@ -31,13 +31,11 @@ const evaluateRFI = (r1: Rank, r2: Rank, suited: boolean, pos: Position, stack: 
       if (high >= 12 && low >= 7) return 'ALLIN';
       if (high === 11 && low >= 8) return 'ALLIN';
     }
-    // UTG is still tight even short
     if (['UTG', 'UTG1', 'UTG2'].includes(pos)) {
       return (pair && high >= 5) || (high === 14 && low >= 10) || (suited && high === 14) ? 'ALLIN' : 'FOLD';
     }
   }
 
-  // Ranges padrão RFI (Raise First In)
   if (['UTG', 'UTG1', 'UTG2'].includes(pos)) {
     if (pair) return high >= 7 ? 'RAISE' : 'FOLD';
     if (suited) return (high === 14 && low >= 2) || (high === 13 && low >= 10) || (high === 12 && low >= 11) ? 'RAISE' : 'FOLD';
@@ -76,7 +74,6 @@ const evaluateVsOpen = (r1: Rank, r2: Rank, suited: boolean, heroPos: Position, 
   const low = Math.min(v1, v2);
   const pair = v1 === v2;
 
-  // SHORT STACK (< 18bb) - Push or Fold strategy (Except BB)
   if (stack <= 18 && heroPos !== 'BB') {
     if (pair && high >= 8) return 'ALLIN';
     if (high === 14 && low >= 12) return 'ALLIN';
@@ -91,7 +88,6 @@ const evaluateVsOpen = (r1: Rank, r2: Rank, suited: boolean, heroPos: Position, 
     return 'FOLD';
   }
 
-  // BIG BLIND DEFENSE
   if (heroPos === 'BB') {
     if (pair && high >= 11) return 'RAISE';
     if (high === 14 && low >= 13) return 'RAISE';
@@ -101,7 +97,6 @@ const evaluateVsOpen = (r1: Rank, r2: Rank, suited: boolean, heroPos: Position, 
     return 'FOLD';
   }
 
-  // MID/DEEP STACK (> 20bb)
   if (pair && high >= 10) return 'RAISE';
   if (high === 14 && low >= 13) return 'RAISE';
   if (pair && high >= 6) return 'CALL';
@@ -119,26 +114,22 @@ const evaluateVs3Bet = (r1: Rank, r2: Rank, suited: boolean, heroPos: Position, 
   const low = Math.min(v1, v2);
   const pair = v1 === v2;
 
-  // Facing 3-bet at 20bb or less is mostly 4-bet Jam or Fold
   if (stack <= 22) {
     if (pair && high >= 9) return 'ALLIN';
     if (high === 14 && low >= 13) return 'ALLIN';
     if (suited && high === 14 && low >= 11) return 'ALLIN';
     
-    // BTN/CO can be slightly wider if the 3-bet is from blinds
     if (['CO', 'BTN'].includes(heroPos)) {
       if (pair && high >= 7) return 'ALLIN';
       if (high === 14 && low >= 12) return 'ALLIN';
       if (suited && high === 14 && low >= 9) return 'ALLIN';
     }
     
-    // T4 is ALWAYS a fold here.
     return 'FOLD';
   }
 
-  // Deep Stack (> 40bb)
-  if (pair && high >= 11) return 'RAISE'; // 4-bet
-  if (high === 14 && low === 14) return 'RAISE'; // AA
+  if (pair && high >= 11) return 'RAISE'; 
+  if (high === 14 && low === 14) return 'RAISE'; 
   if (pair && high >= 7) return 'CALL';
   if (high === 14 && low >= 13) return 'CALL';
   if (suited && high === 14 && low >= 10) return 'CALL';
@@ -151,7 +142,6 @@ const evaluateVs4Bet = (r1: Rank, r2: Rank, suited: boolean, heroPos: Position, 
   const v1 = getRankValue(r1);
   const v2 = getRankValue(r2);
   const high = Math.max(v1, v2);
-  // Fixed: Added definition for low variable to fix reference error on line 162
   const low = Math.min(v1, v2);
   const pair = v1 === v2;
 
@@ -160,8 +150,8 @@ const evaluateVs4Bet = (r1: Rank, r2: Rank, suited: boolean, heroPos: Position, 
   }
 
   if (pair && high >= 13) return 'ALLIN';
-  if (high === 14 && low === 13) return 'ALLIN'; // AKo/AKs
-  if (pair && high === 12) return 'CALL'; // QQ
+  if (high === 14 && low === 13) return 'ALLIN'; 
+  if (pair && high === 12) return 'CALL'; 
   return 'FOLD';
 };
 
@@ -208,7 +198,6 @@ const findHandForAction = (evaluator: Function, pos: Position, targetAction: Act
     if (result === targetAction) return h;
     attempts++;
   }
-  // Fallback to a safe hand for the target action if possible
   if (targetAction === 'RAISE' || targetAction === 'ALLIN') return [{rank: 'A', suit: 's'}, {rank: 'A', suit: 'd'}];
   return [{rank: '7', suit: 's'}, {rank: '2', suit: 'h'}];
 };
@@ -230,7 +219,6 @@ export const generateScenario = (config: TrainingConfig): Scenario => {
 
   if (mode === 'vs 3bet') {
     heroPos = getRandomItem(activePositions.filter(p => !['SB', 'BB'].includes(p)));
-    // Ensure the hand Hero raises with is actually in their RFI range for that position
     hand = findHandForAction(evaluateRFI, heroPos, 'RAISE', heroStack);
     previousActions.push({ position: heroPos, action: 'RAISE', amount: 2.2 });
     
@@ -244,7 +232,6 @@ export const generateScenario = (config: TrainingConfig): Scenario => {
   else if (mode === 'vs 4bet') {
     const opener = getRandomItem(activePositions.slice(0, -2));
     heroPos = getRandomItem(activePositions.slice(activePositions.indexOf(opener) + 1));
-    // Hero 3-bets
     hand = findHandForAction(evaluateVsOpen, heroPos, 'RAISE', heroStack, opener);
     previousActions.push({ position: opener, action: 'RAISE', amount: 2.2 });
     previousActions.push({ position: heroPos, action: 'RAISE', amount: 7.0 });
@@ -284,7 +271,7 @@ export const generateScenario = (config: TrainingConfig): Scenario => {
     correctAction = evaluateVsOpen(hand[0].rank, hand[1].rank, hand[0].suit === hand[1].suit, heroPos, stealer, heroStack);
     potSize = 4.0;
   }
-  else { // RFI
+  else { 
     heroPos = getRandomItem(activePositions.filter(p => !['SB', 'BB'].includes(p)));
     if (Math.random() > 0.4) {
         hand = findHandForAction(evaluateRFI, heroPos, 'RAISE', heroStack);

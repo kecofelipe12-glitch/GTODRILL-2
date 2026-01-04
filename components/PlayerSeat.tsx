@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { Position, ActionType } from '../types';
-import CardUI from './CardUI';
+import { Position, ActionType } from '../types.ts';
+import CardUI from './CardUI.tsx';
 
 interface PlayerSeatProps {
   position: Position;

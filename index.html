@@ -70,34 +70,15 @@
   </head>
   <body>
     <div id="root">
-      <!-- Loading State -->
       <div style="height: 100vh; display: flex; align-items: center; justify-content: center; background: #09090b; color: #52525b; font-family: sans-serif;">
         <div style="text-align: center;">
           <div style="margin-bottom: 20px; font-weight: 900; letter-spacing: -0.05em; font-size: 24px;">GTO<span style="color: #10b981;">DRILL</span></div>
-          <div style="font-size: 11px; text-transform: uppercase; tracking: 0.2em; opacity: 0.5;">Inicializando Motor GTO...</div>
+          <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; opacity: 0.5;">Inicializando Motor GTO...</div>
         </div>
       </div>
     </div>
 
-    <!-- Carregamento do Script Principal via Babel -->
-    <script type="text/babel" data-type="module" src="index.tsx"></script>
-
-    <script>
-      // Fallback para erros de carregamento
-      window.onerror = function(message, source, lineno, colno, error) {
-        console.error("Erro na aplicação:", message, "em", source, lineno);
-        // Se após 5 segundos a tela continuar preta, avisa o usuário
-        setTimeout(() => {
-          const root = document.getElementById('root');
-          if (root && root.innerText.includes('Inicializando')) {
-            root.innerHTML = `<div style="padding: 20px; color: #ef4444; font-family: monospace;">
-              <b>Erro Crítico:</b> A aplicação não pôde ser iniciada.<br/>
-              Verifique sua conexão com a internet e se as permissões do Electron estão corretas.<br/>
-              <pre>${message}</pre>
-            </div>`;
-          }
-        }, 5000);
-      };
-    </script>
+    <!-- O segredo está no data-presets para TypeScript/React e data-type="module" -->
+    <script type="text/babel" data-presets="react,typescript" data-type="module" src="./index.tsx"></script>
   </body>
 </html>
